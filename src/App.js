@@ -1,11 +1,14 @@
-import './App.css';
+import React from "react";
+import MyRouter from "./router/index.js";
+import Register from "./pages/Register.js";
 
 function App() {
   return (
     <div>
-      <h2>Hello</h2>
+      <MyRouter />
+      <Register />
     </div>
-  );
+  )
 }
 
 export default App;
