@@ -70,7 +70,7 @@ function Login(){
                                         <span className="text-danger">{loginInput.error_list.password}</span>
                                     </div>
                                     <button type="submit" onClick={loginUser} className="btn btn-primary">Login</button>
-                                    <Link to="/" className="btn btn-danger float-end">Go to Register</Link>
+                                    <Link to="/register" className="btn btn-danger float-end">Go to Register</Link>
                                 </form>
                             </div>
                         </div>

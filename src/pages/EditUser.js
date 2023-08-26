@@ -1,12 +1,14 @@
 import axios from "axios";
+import { Link, useParams, useNavigate } from "react-router-dom";
 import React, { useState, useEffect } from "react";
-import { Link, useParams } from "react-router-dom";
-// import { CKEditor } from '@ckeditor/ckeditor5-react';
-// import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+import { CKEditor } from '@ckeditor/ckeditor5-react';
+import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 
 function EditUser(){
 
     let { id } = useParams();
+
+    const navigate = useNavigate();
 
     const [inputErrorList, setInputErrorList] = useState({})
 
@@ -14,6 +16,23 @@ function EditUser(){
 
     useEffect(()=> {
         axios.get(`http://127.0.0.1:8000/api/users/${id}/edit`).then(res=> {
+            
+            // setName(res.data.user);
+            // setTempName(res.data.user);
+
+            // setEmail(res.data.user);
+            // setTempEmail(res.data.user);
+
+            // setPhone(res.data.user);
+            // setTempPhone(res.data.user);
+
+            // setTechnologies(res.data.user);
+            // setTempTechnologies(res.data.user);
+
+            // setDescription(res.data.user);
+            // setTempDescription(res.data.user);
+
+
             console.log(res)
             setUser(res.data.user);
         }).catch(function (error) {
@@ -28,10 +47,56 @@ function EditUser(){
         });
     }, [id])
     
+    // const [name, setName] = useState('');
+    // const [tempName, setTempName] = useState('');
+
+    // const [email, setEmail] = useState('');
+    // const [tempEmail, setTempEmail] = useState('');
+
+    // const [phone, setPhone] = useState('');
+    // const [tempPhone, setTempPhone] = useState('');
+
+    // const [technologies, setTechnologies] = useState('');
+    // const [tempTechnologies, setTempTechnologies] = useState('');
+
+    const [description, setDescription] = useState('');
+    // const [tempDescription, setTempDescription] = useState('');
+    // // const [password, setpassword] = useState('');
+  
+    // const handleNameChange = event => {
+    //   setName(event.target.value);
+    // };
+  
+    // const handleEmailChange = event => {
+    //   setEmail(event.target.value);
+    // };
+
+    // const handlePhoneChange = event => {
+    //     setPhone(event.target.value);
+    // };
+
+    // const handleTechnologiesChange = event => {
+    //     setTechnologies(event.target.value);
+    // };
+  
+    // const handleEditorChange = (event, editor) => {
+    //     const data = editor.getData();
+    //     setDescription(data);
+    //   };
+
+    // // const handlePasswordChange = event => {
+    // //     setpassword(event.target.value);
+    // // };
+
     const handleInput = (e) => {
         e.persist();
         setUser({...user, [e.target.name]: e.target.value});
     }
+
+    const handleEditorChange = (event, editor) => {
+        const data = editor.getData();
+        setDescription(data);
+      };
 
     const updateUser = (e) => {
         e.preventDefault();
@@ -41,30 +106,27 @@ function EditUser(){
             email: user.email,
             phone: user.phone,
             technologies: user.technologies,
-            description: user.description,
-            password: user.password,
+            description: description,
+            // password: user.password,
         }
 
         axios.put(`http://127.0.0.1:8000/api/users/${id}/edit`, data).then(res => {
             alert(res.data.message);
+            navigate('/view-user');
         }).catch(function (error) {
             if(error.response){
                 if(error.response.status === 422){
                     setInputErrorList(error.response.data.errors)
                 }
-                if(error.response.status === 404){
-                    setInputErrorList(error.response.data.errors)
-                }
-                if(error.response.status === 500){
+                else if(error.response.status === 500){
                     alert(error.response.data)
                 }
             }
         })
     }
 
-
-
     return(
+
         <div>
             <div className="container mt-5">
                 <div className="row">
@@ -82,7 +144,7 @@ function EditUser(){
                                     </div>
                                     <div className="mb-3">
                                         <label className="form-label">User Email:</label>
-                                        <input type="email" name="email" value={user.email} onChange={handleInput}  className="form-control" />
+                                        <input type="email" name="email" value={user.email} onChange={handleInput} className="form-control" />
                                         <span className="text-danger">{inputErrorList.email}</span>
                                     </div>
                                     <div className="mb-3">
@@ -98,36 +160,22 @@ function EditUser(){
                                             <option value="2">PHP Laravel</option>
                                             <option value="3">MySQL</option>
                                         </select> */}
-                                        <input type="text" name="technologies" value={user.technologies} onChange={handleInput} className="form-control" />
+                                        <input type="text" name="technologies" value={user.technologies} onChange={handleInput}  className="form-control" />
                                         <span className="text-danger">{inputErrorList.technologies}</span>
                                     </div>
                                     <div className="mb-3">
                                         <label className="form-label">Description:</label>
-                                        {/* <CKEditor
+                                        <CKEditor
                                             editor={ ClassicEditor }
-                                            data=""
-                                            onReady={ editor => {
-                                                // You can store the "editor" and use when it is needed.
-                                                console.log( 'Editor is ready to use!', editor );
-                                            } }
-                                            onChange={ ( event, editor ) => {
-                                                const data = editor.getData();
-                                                console.log( { event, editor, data } );
-                                            } }
-                                            onBlur={ ( event, editor ) => {
-                                                console.log( 'Blur.', editor );
-                                            } }
-                                            onFocus={ ( event, editor ) => {
-                                                console.log( 'Focus.', editor );
-                                            } }
-                                        /> */}
-                                        <textarea name="description" value={user.description} onChange={handleInput} className="form-control" rows="5" />
+                                            name="description"
+                                            data= {user.description}
+                                            onInit={ editor=> {
+
+                                            }}
+                                            onChange={handleEditorChange}
+                                            // onChange={(e) => {setTempDescription({...tempDescription, description: e.target.value,})}}
+                                        />
                                         <span className="text-danger">{inputErrorList.description}</span>
-                                    </div>
-                                    <div className="mb-3">
-                                        <label className="form-label">Change Password:</label>
-                                        <input type="text" name="password" value={user.password} onChange={handleInput} className="form-control" />
-                                        <span className="text-danger">{inputErrorList.password}</span>
                                     </div>
                                     <button type="submit" className="btn btn-primary">Update</button>
                                     <Link to="/view-user" className="btn btn-secondary float-end">My Profile</Link>                                    
@@ -138,6 +186,7 @@ function EditUser(){
                 </div>
             </div>
         </div>
+
     )
 }
 
