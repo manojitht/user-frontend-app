@@ -10,7 +10,7 @@ function MyRouter(){
             <Route path="/" element={<Register />} />
             <Route path="/login" element={<Login />} />
             <Route path="/view-user" element={<ViewUser />} />
-            <Route path="/edit-user" element={<EditUser />} />
+            <Route path="/users/:id/edit" element={<EditUser />} />
         </Routes>
     )
 }

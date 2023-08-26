@@ -1,44 +1,50 @@
 import axios from "axios";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import React, { useState } from "react";
 
 function Login(){
 
-    const [inputErrorList, setInputErrorList] = useState({})
+    const navigate = useNavigate();
 
-    const[user, setUser] = useState({
+    const [loginInput, setLogin] = useState({
         email: '',
-        password: ''
+        password: '',
+        error_list: [],
     })
-   
+
     const handleInput = (e) => {
         e.persist();
-        setUser({...user, [e.target.name]: e.target.value});
+        setLogin({...loginInput, [e.target.name]: e.target.value });
     }
 
-    const data = {
-        email: user.email,
-        password: user.password,
-    }
+    const loginUser = (e) => {
+        e.preventDefault();
 
-    const loginUser = () => {
-        
-        // if(user.email === ""){
-        //     alert('Please enter email!')
-        // }
-        // else if(user.password === ""){
-        //     alert('Please enter password!')
-        // }
-
-        axios.post(`http://127.0.0.1:8000/api/login`, data).then(res => {
-            alert(res.data.message);
-        }).catch(function (error) {
-            if(error.response){
-                if(error.response.status === 404){
-                    setInputErrorList(error.response.data.errors)
+        const data = {
+            email: loginInput.email,
+            password: loginInput.password,
+        }
+        // axios.get('/sanctum/csrf-cookie').then(response => {
+            axios.post('http://127.0.0.1:8000/api/login', data).then(res => {
+                if(res.data.status === 200) {
+                    localStorage.setItem('auth_token', res.data.token)
+                    localStorage.setItem('auth_id', res.data.userid)
+                    localStorage.setItem('auth_name', res.data.username)
+                    localStorage.setItem('auth_email', res.data.useremail)
+                    localStorage.setItem('auth_phone', res.data.userphone)
+                    localStorage.setItem('auth_technologies', res.data.usertechnologies)
+                    localStorage.setItem('auth_description', res.data.userdescription)
+                    navigate('/view-user');
                 }
-            }
-        })
+                else if(res.data.status === 401) {
+
+                } 
+                else {
+                    setLogin({...loginInput, error_list: res.data.errors });
+                }
+            });
+        // });
+
     }
 
     return(
@@ -52,18 +58,18 @@ function Login(){
                                 </h4>
                             </div>
                             <div className="card-body">
-                                <form onSubmit={loginUser}>
+                                <form>
                                     <div className="mb-3">
                                         <label className="form-label">User Email:</label>
-                                        <input type="email" name="email" value={user.email} onChange={handleInput}  className="form-control" />
-                                        <span className="text-danger">{inputErrorList.email}</span>
+                                        <input type="email" name="email" value={loginInput.email} onChange={handleInput} className="form-control" />
+                                        <span className="text-danger">{loginInput.error_list.email}</span>
                                     </div>
                                     <div className="mb-3">
                                         <label className="form-label">Password:</label>
-                                        <input type="text" name="password" value={user.password} onChange={handleInput} className="form-control" />
-                                        <span className="text-danger">{inputErrorList.password}</span>
+                                        <input type="password" name="password" value={loginInput.password} onChange={handleInput} className="form-control" />
+                                        <span className="text-danger">{loginInput.error_list.password}</span>
                                     </div>
-                                    <button type="submit" className="btn btn-primary">Login</button>
+                                    <button type="submit" onClick={loginUser} className="btn btn-primary">Login</button>
                                     <Link to="/" className="btn btn-danger float-end">Go to Register</Link>
                                 </form>
                             </div>
