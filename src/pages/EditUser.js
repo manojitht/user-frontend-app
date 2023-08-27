@@ -3,6 +3,8 @@ import { Link, useParams, useNavigate } from "react-router-dom";
 import React, { useState, useEffect } from "react";
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+import MultiSelect from  'react-multiple-select-dropdown-lite'
+import  'react-multiple-select-dropdown-lite/dist/index.css'
 
 function EditUser(){
 
@@ -32,6 +34,7 @@ function EditUser(){
     }, [id])
 
     const [description, setDescription] = useState('');
+    const [technologies, setTechnologies] = useState('');
 
     const handleInput = (e) => {
         e.persist();
@@ -43,6 +46,28 @@ function EditUser(){
         setDescription(data);
       };
 
+    const handleOnchange = val => {
+          setTechnologies(val)
+      }
+  
+      const  options  = [
+        { label:  'Java', value:  'Python'  },
+        { label:  'Python', value:  'Java'  },
+        { label:  'PHP', value:  'PHP'  },
+        { label:  'C++', value:  'C++'  },
+        { label:  'C#', value:  'C#'  },
+        { label:  'JavaScript', value:  'JavaScript'  },
+        { label:  'TypeScript', value:  'TypeScript'  },
+        { label:  'Html', value:  'Html'  },
+        { label:  'CSS', value:  'CSS'  },
+        { label:  'Angular', value:  'Angular'  },
+        { label:  'React Js', value:  'React Js'  },
+        { label:  'Django', value:  'Django'  },
+        { label:  'Spring Boot', value:  'Spring Boot'  },
+        { label:  'AWS', value:  'AWS'  },
+        { label:  'Azure', value:  'Azure'  },
+    ]
+
     const updateUser = (e) => {
         e.preventDefault();
         
@@ -50,7 +75,7 @@ function EditUser(){
             name: user.name,
             email: user.email,
             phone: user.phone,
-            technologies: user.technologies,
+            technologies: technologies,
             description: description,
         }
 
@@ -97,14 +122,9 @@ function EditUser(){
                                         <span className="text-danger">{inputErrorList.phone}</span>
                                     </div>
                                     <div className="mb-3">
-                                        <label className="form-label">Technologies:</label>
-                                        {/* <select class="form-select" multiple aria-label="Multiple select example">
-                                            <option selected>Python</option>
-                                            <option value="1">AWS</option>
-                                            <option value="2">PHP Laravel</option>
-                                            <option value="3">MySQL</option>
-                                        </select> */}
-                                        <input type="text" name="technologies" value={user.technologies} onChange={handleInput}  className="form-control" />
+                                        <label className="form-label">Existing Tech on your profile:</label><p class="card-text">{user.technologies}</p>
+                                        <label className="form-label">Choose Technologies:</label>
+                                        <MultiSelect name="technologies" value={user.technologies} onChange={handleOnchange} options={options} placeholder="Choose to edit technologies" />
                                         <span className="text-danger">{inputErrorList.technologies}</span>
                                     </div>
                                     <div className="mb-3">

@@ -3,6 +3,8 @@ import { Link, useNavigate } from "react-router-dom";
 import React, { useState } from "react";
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+import MultiSelect from  'react-multiple-select-dropdown-lite'
+import  'react-multiple-select-dropdown-lite/dist/index.css'
 
 function Register(){
 
@@ -17,6 +19,28 @@ function Register(){
     const [technologies, setTechnologies] = useState('');
     const [description, setDescription] = useState('');
     const [password, setpassword] = useState('');
+    
+    const  options  = [
+        { label:  'Java', value:  'Python'  },
+        { label:  'Python', value:  'Java'  },
+        { label:  'PHP', value:  'PHP'  },
+        { label:  'C++', value:  'C++'  },
+        { label:  'C#', value:  'C#'  },
+        { label:  'JavaScript', value:  'JavaScript'  },
+        { label:  'TypeScript', value:  'TypeScript'  },
+        { label:  'Html', value:  'Html'  },
+        { label:  'CSS', value:  'CSS'  },
+        { label:  'Angular', value:  'Angular'  },
+        { label:  'React Js', value:  'React Js'  },
+        { label:  'Django', value:  'Django'  },
+        { label:  'Spring Boot', value:  'Spring Boot'  },
+        { label:  'AWS', value:  'AWS'  },
+        { label:  'Azure', value:  'Azure'  },
+    ]
+
+    const handleOnchange = val => {
+        setTechnologies(val)
+    }
   
     const handleNameChange = event => {
       setName(event.target.value);
@@ -28,10 +52,6 @@ function Register(){
 
     const handlePhoneChange = event => {
         setPhone(event.target.value);
-    };
-
-    const handleTechnologiesChange = event => {
-        setTechnologies(event.target.value);
     };
   
     const handleEditorChange = (event, editor) => {
@@ -98,13 +118,8 @@ function Register(){
                                         <span className="text-danger">{inputErrorList.phone}</span>
                                     </div>
                                     <div className="mb-3">
-                                        <label className="form-label">Technologies:</label>
-                                        {/* <select name="technologies" value={technologies} onChange={handleTechnologiesChange} class="form-select" multiple aria-label="Multiple select example">
-                                            <option value="1">AWS</option>
-                                            <option value="2">PHP Laravel</option>
-                                            <option value="3">MySQL</option>
-                                        </select> */}
-                                        <input type="text" name="technologies" value={technologies} onChange={handleTechnologiesChange} className="form-control" />
+                                        <label className="form-label">Technologies Select:</label>
+                                        <MultiSelect name="technologies" value={technologies} onChange={handleOnchange} options={options} />
                                         <span className="text-danger">{inputErrorList.technologies}</span>
                                     </div>
                                     <div className="mb-3">
