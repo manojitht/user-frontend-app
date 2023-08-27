@@ -1,28 +1,22 @@
 import axios from "axios";
-import { Link, useNavigate } from "react-router-dom";
-import React from "react";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import React, { useState, useEffect } from "react";
 import HTMLReactParser from 'html-react-parser';
 
 function ViewUser(){
 
+    const { id }= useParams();
     const navigate = useNavigate();
+    
+    const [user, setUser] = useState([]);
 
-    // const { id }= useParams();
-    // const navigate = useNavigate();
+    useEffect(()=> {
+        axios.get(`http://127.0.0.1:8000/api/users/${id}`).then(res=> {
+            setUser(res.data.user);
+        });
+    }, [id])
 
-    const user_id = localStorage.getItem("auth_id");
-    const user_name = localStorage.getItem("auth_name");
-    const user_email = localStorage.getItem("auth_email");
-    const user_phone = localStorage.getItem("auth_phone");
-    const user_technologies = localStorage.getItem("auth_technologies");
-    const user_description = localStorage.getItem("auth_description");
-
-    const htmlContent = user_description
-
-    // const logout = () => {
-    //     localStorage.removeItem("auth_token");
-    //     navigate('/');
-    // }
+    const htmlContent = String(user.description);
 
     const deleteUser = (e, id) => {
         e.preventDefault();
@@ -44,7 +38,7 @@ function ViewUser(){
             }
         })
     }
-
+    
     return(
         <div>
             <div className="container mt-5">
@@ -52,26 +46,30 @@ function ViewUser(){
                     <div className="col-md-12">
                         <div className="card">
                             <div className="card-header">
-                                <h4>Welcome to your profile!</h4>
+                                <h4>Welcome to your profile!
+                                <Link to="/home" className="btn btn-warning float-end">Back to Home</Link>
+                                </h4>
                             </div>
                             <div className="card-body">
                             <div class="card">
                                 <div class="card-header">
-                                    <h3 class="card-title">{user_name}</h3>
+                                    <h3 class="card-title">Hello, {user.name}!</h3>
                                 </div>
                                 <div class="card-body">
+                                    <h4 class="card-title">Name:</h4>
+                                    <p class="card-text">{user.name}</p>
                                     <h4 class="card-title">Email:</h4>
-                                    <p class="card-text">{user_email}</p>
+                                    <p class="card-text">{user.email}</p>
                                     <h4 class="card-title">Phone:</h4>
-                                    <p class="card-text">{user_phone}</p>
+                                    <p class="card-text">{user.phone}</p>
                                     <h4 class="card-title">Technologies:</h4>
-                                    <p class="card-text">{user_technologies}</p>
+                                    <p class="card-text">{user.technologies}</p>
                                     <h4 class="card-title">Description:</h4>
                                     <div>
                                         {HTMLReactParser(htmlContent)}
                                     </div>
-                                    <Link to={`/users/${user_id}/edit`} className="btn btn-success">Edit Account</Link>
-                                    <button type="button" onClick={(e) => deleteUser(e, user_id)} className="btn btn-danger float-end">Delete My Account</button>
+                                    <Link to={`/users/${user.id}/edit`} className="btn btn-success">Edit Account</Link>
+                                    <button type="button" onClick={(e) => deleteUser(e, user.id)} className="btn btn-danger float-end">Delete My Account</button>
                                 </div>
                             </div>
                             </div>

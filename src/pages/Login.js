@@ -24,27 +24,21 @@ function Login(){
             email: loginInput.email,
             password: loginInput.password,
         }
-        // axios.get('/sanctum/csrf-cookie').then(response => {
             axios.post('http://127.0.0.1:8000/api/login', data).then(res => {
                 if(res.data.status === 200) {
-                    localStorage.setItem('auth_token', res.data.token)
                     localStorage.setItem('auth_id', res.data.userid)
-                    localStorage.setItem('auth_name', res.data.username)
-                    localStorage.setItem('auth_email', res.data.useremail)
-                    localStorage.setItem('auth_phone', res.data.userphone)
-                    localStorage.setItem('auth_technologies', res.data.usertechnologies)
-                    localStorage.setItem('auth_description', res.data.userdescription)
-                    navigate('/view-user');
+                    navigate('/home');
                 }
                 else if(res.data.status === 401) {
 
+                } 
+                else if(res.data.status === 500) {
+                    alert("Something went wrong!")
                 } 
                 else {
                     setLogin({...loginInput, error_list: res.data.errors });
                 }
             });
-        // });
-
     }
 
     return(

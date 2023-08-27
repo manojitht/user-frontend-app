@@ -10,6 +10,7 @@ function Register(){
 
     const [inputErrorList, setInputErrorList] = useState({})
 
+    // keeping the state of input fields
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [phone, setPhone] = useState('');
@@ -54,14 +55,13 @@ function Register(){
             password: password,
         }
 
-        axios.post(`http://127.0.0.1:8000/api/register`, data).then(res => {
+        axios.post(`http://127.0.0.1:8000/api/register`, data).then(res => { // calling the laravel api to register the users with input data
             alert(res.data.message);
             navigate('/')
         }).catch(function (error) {
             if(error.response){
                 if(error.response.status === 422){
                     setInputErrorList(error.response.data.errors)
-                    // setLoading(false);
                 }
                 if(error.response.status === 500){
                     alert(error.response.data)
